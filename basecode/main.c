@@ -44,18 +44,31 @@ int main(int argc, const char * argv[]) {
     }
     
     //1-2. loading each patient informations
+    
+    //불러와야함 ifsele_genElement(); --> 구조체에 저장, 이제 이거를 활용. 
+    
+
+//	void ifctele_printElement(void* ifct_element);
+    
  	while (3 == fscanf(fp, "%d %d %d\n", &pIndex, &age, &time))
 	{
+		
  		int i;
- 		printf("%d 번째 환자 감염 경로: ", pIndex);
+ 		//printf("%d 번째 환자 감염 경로: ", pIndex);
+ 		int history_place[N_HISTORY];
+ 		
  		for (i=0;i<N_HISTORY;i++)
 		{
  			fscanf(fp, "%d", &placeHist[i]);
- 			printf(" %s(% )  ", ifctele_getPlaceName(placeHist[i]) /*, 감염시점*/ );
+ 			history_place[i] = placeHist[i];
+ 			//printf(" %s(% )  ", ifctele_getPlaceName(placeHist[i]) /*, 감염시점*/ ); 		
 		}
-		printf("\n");
+				
+		//printf("\n");
+//		int history_place[N_HISTORY] = {placeHist[0], placeHist[1],placeHist[2],placeHist[3],placeHist[4]};
+		ifctele_genElement(pIndex, age, time, history_place);
+		
 	}
-	
 	
     //1-3. FILE pointer close 
     fclose(fp);
@@ -83,18 +96,24 @@ int main(int argc, const char * argv[]) {
                 break;
                 
             case MENU_PATIENT:        //1
+            
+            	/*
                 printf("Patient index :");
                 scanf("%d", &patient_selection);
                 if (patient_selection == pIndex)
                 	printf("%d %d %d", pIndex, age, time);
-                ///
+                /// */
                 printf("-------------------------------------------------------\n");
-                printf("Patient index : %d\n", patient_selection);
+                printf("Patient index : ");
+                scanf("%d", &patient_selection);
+                
+                //ifsarray[patient_selection].age
                 
                 
+			//	ifctele_printElement(ifctele_getAge(ifct_element));
+				
+                printf("age:%i", ifctele_getAge(ifct_element));
                 
-                //if patient_selection == filepointer pIndex --> load informaion
-                //(age, time, History)
                 printf("-------------------------------------------------------\n");
                 break;
                 
