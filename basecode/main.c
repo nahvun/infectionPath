@@ -68,6 +68,7 @@ int main(int argc, const char * argv[]) {
 //		int history_place[N_HISTORY] = {placeHist[0], placeHist[1],placeHist[2],placeHist[3],placeHist[4]};
 		ifctele_genElement(pIndex, age, time, history_place);
 		
+		ifctele_printElement(ifct_element);
 	}
 	
     //1-3. FILE pointer close 

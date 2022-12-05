@@ -144,28 +144,27 @@ void* ifctele_genElement(int index, int age, unsigned int detected_time, int his
 int ifctele_getAge(void* obj)
 {
 	ifs_ele_t *strPtr = (ifs_ele_t *)obj; 	//생각. ifs_ele_t[ifs_cnt]처럼 배열 ?? 
-	// ifsarray[ifs_cnt-1];
-	//printf("%d\n", ifsarray[ifs_cnt-1].index );
-//	ifsarray[patient_selection].age
-	printf("%d\n", ifsarray[ifs_cnt-1].index );
-	printf("%d\n", ifsarray[ifs_cnt-1].age );
+
+
+	//printf("%d\n", ifsarray[ifs_cnt-1].index );		//얘도 main.c while문 안에 넣으면 출력되긴 함. index에 따라서 원하는 값 출ㄹ력하기 해야함. 
+//	printf("%d\n", ifsarray[ifs_cnt-1].age );
 	
 //	scanf("%i", &patient_selection);
 	strPtr = &ifsarray[ifs_cnt-1];
-	return strPtr->age; 
+	return strPtr->age;
 }
 
 unsigned int ifctele_getinfestedTime(void* obj)
 {
 	ifs_ele_t *strPtr = (ifs_ele_t *)obj;
-	
+	strPtr = &ifsarray[ifs_cnt-1];
 	return strPtr->detected_time;
 }
 
 int ifctele_getHistPlaceIndex(void* obj, int index)
 {
 	ifs_ele_t *strPtr = (ifs_ele_t *)obj;
-	
+	strPtr = &ifsarray[ifs_cnt-1];
 	return strPtr->place_t[index]; 
 }
 
@@ -174,7 +173,11 @@ int ifctele_getHistPlaceIndex(void* obj, int index)
 void ifctele_printElement(void* obj)
 {
 	ifs_ele_t *strPtr = (ifs_ele_t *)obj;
+//	strPtr = (ifs_ele_t*)ifsarray[ifs_cnt-1].age ;
 	
+	printf("printElement_age: %i\n", ifctele_getAge(strPtr) );
+	printf("printElement_time: %i\n", ifctele_getinfestedTime(strPtr) );
+	//printf("printElement_place: %i\n", ifctele_getHistPlaceIndex(strPtr) );     //Q. 얘가 문제. 받아오는 값의 갯수가 다름. 어떻게 ? if?  
 //	strPtr = &ifsarray[ifs_cnt-1];
 	//printf("%d\n", ifsarray[ifs_cnt-1].index );
 		
