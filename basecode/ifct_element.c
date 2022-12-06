@@ -108,7 +108,8 @@ typedef struct ifs_ele			//감염자정보 저장 구조체
 	int index;
 	int age;
 	int detected_time;
-	int place_t[N_HISTORY];         //다시체크   
+	//int place_t[N_HISTORY];         //다시체크   !!!!!!!!!==> place_t history_place[N_HISTORY]로 변경하기  !!!!!!
+	place_t place[N_HISTORY];
 	
 } ifs_ele_t;
 
@@ -126,7 +127,8 @@ void* ifctele_genElement(int index, int age, unsigned int detected_time, int his
 	ifsarray[ifs_cnt].detected_time = detected_time;
 	//if i=0부터i=N_HISTORY 
 	for(i=0;i<N_HISTORY;i++)
-		ifsarray[ifs_cnt].place_t[i] = history_place[i];
+	//	ifsarray[ifs_cnt].place_t[i] = history_place[i];
+		ifsarray[ifs_cnt].place[i] = history_place[i];
 		
 ///	for(i=0;i<N_HISTORY;i++)    삭제  
 ///		ifsarray[ifs_cnt].place_t[N_HISTORY] = history_place[N_HISTORY];  얘만 남기거나 위에꺼 둘 중 하나.  
@@ -165,7 +167,8 @@ int ifctele_getHistPlaceIndex(void* obj, int index)
 {
 	ifs_ele_t *strPtr = (ifs_ele_t *)obj;
 	strPtr = &ifsarray[ifs_cnt-1];
-	return strPtr->place_t[index]; 
+	//return strPtr->place_t[index]; 
+	return strPtr->place[index]; 
 }
 
 
@@ -174,6 +177,8 @@ void ifctele_printElement(void* obj)
 {
 	ifs_ele_t *strPtr = (ifs_ele_t *)obj;
 //	strPtr = (ifs_ele_t*)ifsarray[ifs_cnt-1].age ;
+	
+	////////printf("Age: %i\n", strPtr->age);
 	
 	printf("printElement_age: %i\n", ifctele_getAge(strPtr) );
 	printf("printElement_time: %i\n", ifctele_getinfestedTime(strPtr) );

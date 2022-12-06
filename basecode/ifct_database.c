@@ -200,7 +200,6 @@ int ifctdb_len(void)
     return list_cnt;
 }
 
-
 /*
     description : get the object data
     input parameters : index
