@@ -85,6 +85,7 @@ int main(int argc, const char * argv[]) {
         
         int patient_selection; 
         char place_selection;
+        int maxAge_selection, minAge_selection;
         int i;
         
         switch(menu_selection)
@@ -111,22 +112,37 @@ int main(int argc, const char * argv[]) {
                 printf("Place name : ");
                 scanf("%s", &place_selection);  ////받아온 정보들 중에서 장소를 이름으로 바꾼 후 비교. 
                 
-                for(i=0;i<5;i++)
+                for(i=0;i<5;i++)////몇명의 정보를 가져온지 아직 모름. 그만큼 돌려야 함(5 수정)  
                 {	
-                	char *placeName = ifctele_getPlaceName(ifctele_getHistPlaceIndex(ifctdb_getData(i), 4)) ;
-                	printf("%s", placeName);
-                	if (place_selection == *placeName )
-                		printf("success(%s)", placeName);
-					else 
-						printf("fail%i  ", i);
-				}
+                	char* placeName = ifctele_getPlaceName(ifctele_getHistPlaceIndex(ifctdb_getData(i), 4));
                 
-                          
+					if (strcmp(&place_selection, placeName)==0)
+                		ifctele_printElement(ifctdb_getData(i));								
+				}
+				
                 printf("-------------------------------------------------------\n");
                 break;
                 
             case MENU_AGE:              //3
                 
+                printf("Min age: ");
+                scanf("%d", &minAge_selection);
+                printf("Max age: ");
+                scanf("%d", &maxAge_selection);
+                
+                int cnt = 0;
+                
+                for(i=0;i<5;i++)		////몇명의 정보를 가져온지 아직 모름. 그만큼 돌려야 함(5 수정)  
+                {	                	
+                	int getAge = ifctele_getAge(ifctdb_getData(i));
+                	
+					if ((getAge>minAge_selection) && (getAge<maxAge_selection))
+						ifctele_printElement(ifctdb_getData(i));
+					cnt++;																	
+				}
+				
+				printf("there are %d patients between age from %d to %d", cnt, minAge_selection, maxAge_selection );
+				
                 break;
                 
             case MENU_TRACK:          //4
