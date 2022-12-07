@@ -54,21 +54,16 @@ int main(int argc, const char * argv[]) {
 	{
 		
  		int i;
- 		//printf("%d 번째 환자 감염 경로: ", pIndex);
  		int history_place[N_HISTORY];
  		
  		for (i=0;i<N_HISTORY;i++)
 		{
  			fscanf(fp, "%d", &placeHist[i]);
- 			history_place[i] = placeHist[i];
- 			//printf(" %s(% )  ", ifctele_getPlaceName(placeHist[i]) /*, 감염시점*/ ); 		
+ 			history_place[i] = placeHist[i];	
 		}
 				
-		//printf("\n");
-//		int history_place[N_HISTORY] = {placeHist[0], placeHist[1],placeHist[2],placeHist[3],placeHist[4]};
-		ifctele_genElement(pIndex, age, time, history_place);
-		
-		ifctele_printElement(ifct_element);
+		ifct_element = ifctele_genElement(pIndex, age, time, history_place);
+		ifctdb_addTail(ifct_element);     //while문 한번 돌 때 구조체를 만들어서 linkedtolist에 넣ㄴ음.  
 	}
 	
     //1-3. FILE pointer close 
@@ -89,6 +84,8 @@ int main(int argc, const char * argv[]) {
         fflush(stdin);
         
         int patient_selection; 
+        char place_selection;
+        int i;
         
         switch(menu_selection)
         {
@@ -98,28 +95,34 @@ int main(int argc, const char * argv[]) {
                 
             case MENU_PATIENT:        //1
             
-            	/*
-                printf("Patient index :");
-                scanf("%d", &patient_selection);
-                if (patient_selection == pIndex)
-                	printf("%d %d %d", pIndex, age, time);
-                /// */
-                printf("-------------------------------------------------------\n");
                 printf("Patient index : ");
                 scanf("%d", &patient_selection);
+                printf("-------------------------------------------------------\n");
                 
-                //ifsarray[patient_selection].age
-                
-                
-			//	ifctele_printElement(ifctele_getAge(ifct_element));
-				
-                printf("age:%i", ifctele_getAge(ifct_element));
+                ifctele_printElement(ifctdb_getData(patient_selection));
                 
                 printf("-------------------------------------------------------\n");
                 break;
                 
             case MENU_PLACE:           //2
                 
+				printf("-------------------------------------------------------\n");
+				
+                printf("Place name : ");
+                scanf("%s", &place_selection);  ////받아온 정보들 중에서 장소를 이름으로 바꾼 후 비교. 
+                
+                for(i=0;i<5;i++)
+                {	
+                	char *placeName = ifctele_getPlaceName(ifctele_getHistPlaceIndex(ifctdb_getData(i), 4)) ;
+                	printf("%s", placeName);
+                	if (place_selection == *placeName )
+                		printf("success(%s)", placeName);
+					else 
+						printf("fail%i  ", i);
+				}
+                
+                          
+                printf("-------------------------------------------------------\n");
                 break;
                 
             case MENU_AGE:              //3
