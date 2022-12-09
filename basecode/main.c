@@ -45,11 +45,6 @@ int main(int argc, const char * argv[]) {
     
     //1-2. loading each patient informations
     
-    //불러와야함 ifsele_genElement(); --> 구조체에 저장, 이제 이거를 활용. 
-    
-
-//	void ifctele_printElement(void* ifct_element);
-    
  	while (3 == fscanf(fp, "%d %d %d\n", &pIndex, &age, &time))
 	{
 		
@@ -87,6 +82,7 @@ int main(int argc, const char * argv[]) {
         char place_selection;
         int maxAge_selection, minAge_selection;
         int i;
+        int cnt = 0;
         
         switch(menu_selection)
         {
@@ -98,29 +94,26 @@ int main(int argc, const char * argv[]) {
             
                 printf("Patient index : ");
                 scanf("%d", &patient_selection);
-                printf("-------------------------------------------------------\n");
-                
                 ifctele_printElement(ifctdb_getData(patient_selection));
                 
-                printf("-------------------------------------------------------\n");
                 break;
                 
             case MENU_PLACE:           //2
-                
-				printf("-------------------------------------------------------\n");
-				
+                				
                 printf("Place name : ");
                 scanf("%s", &place_selection);  ////받아온 정보들 중에서 장소를 이름으로 바꾼 후 비교. 
                 
-                for(i=0;i<5;i++)////몇명의 정보를 가져온지 아직 모름. 그만큼 돌려야 함(5 수정)  
+                for(i=0;i<5;i++)////몇명의 정보를 가져온지 아직 모름. 그만큼 돌려야 함(5 수정)  -->while 문 안에서 몇번 돌았는지 세면 될듯 
                 {	
                 	char* placeName = ifctele_getPlaceName(ifctele_getHistPlaceIndex(ifctdb_getData(i), 4));
                 
 					if (strcmp(&place_selection, placeName)==0)
-                		ifctele_printElement(ifctdb_getData(i));								
+					{
+						ifctele_printElement(ifctdb_getData(i));
+						cnt++;
+					}             										
 				}
-				
-                printf("-------------------------------------------------------\n");
+				printf("there are %d patients in %s", cnt, &place_selection);
                 break;
                 
             case MENU_AGE:              //3
@@ -129,24 +122,59 @@ int main(int argc, const char * argv[]) {
                 scanf("%d", &minAge_selection);
                 printf("Max age: ");
                 scanf("%d", &maxAge_selection);
-                
-                int cnt = 0;
-                
+                                
                 for(i=0;i<5;i++)		////몇명의 정보를 가져온지 아직 모름. 그만큼 돌려야 함(5 수정)  
                 {	                	
                 	int getAge = ifctele_getAge(ifctdb_getData(i));
                 	
-					if ((getAge>minAge_selection) && (getAge<maxAge_selection))
+					if ((getAge>=minAge_selection) && (getAge<=maxAge_selection))			//등호에 따라. 제출 전 나이 경계부분 확인하기.  
+					{
 						ifctele_printElement(ifctdb_getData(i));
-					cnt++;																	
+						cnt++;
+					}																	
 				}
-				
-				printf("there are %d patients between age from %d to %d", cnt, minAge_selection, maxAge_selection );
+				printf("there are %d patients between age from %d to %d \n\n ", cnt, minAge_selection, maxAge_selection ); //ㅊcnt수정 필요  
 				
                 break;
                 
             case MENU_TRACK:          //4
-                    
+            
+            	printf("Patient index : ");
+                scanf("%d", &patient_selection);
+                int current_p = patient_selection;
+				int first_p=-1, infection_p=-1;
+        		
+        		printf("0and 2 is met : %d", isMet(0,2));
+        		/* Pseudocoding
+        		해야하는 것: 환자 정보 받아와서   그사람이 누구를 만났는지 추적.     같은 장소에 있었던 사람이 추적되면 같은 시간에 있었는지까지 확인. 
+        			getdata(current_p)                    trackInfecter()                     isMet()
+        		
+        		ifctdb_getData(int index);   받아올 환자 번호 입력하면 그 구조체 전달 
+        		ifctele_getHistPlaceIndex(void* obj, int index);   환자의 몇번째 장소 가져옴. obj 자리에  ifctdb_getData(int index)
+				ifctele_getinfestedTime(void* obj);   환자가 몇번째 장소에서 감염된건지 가져옴
+				
+				isMet(int p1, int p2)  p1과 p2가 만난 시간 가져오는 함수  
+        		
+        		
+        		*/
+        		
+        	//	detectedTime(current_p, ifctele_getHistPlaceIndex(current_p, 1));
+                //printf("%d", ifctele_getinfestedTime(ifctdb_getData(patient_selection))); //선택한 환자의 detected time 
+                /*
+                while(current_p != first_p) 
+                {
+                	infection_p = trackInfecter(current_p);
+                	if (infection_p != 0)
+                		printf("%i환자는 %i 환자에게 전파됨\n", current_p, infection_p);
+                   	else
+                		first_p = current_p;
+                		
+                	current_p = infection_p;                	
+				}
+				printf("The first infector of %d is %d",patient_selection, current_p);   
+                */
+                
+                
                 break;
                 
             default:
@@ -158,4 +186,76 @@ int main(int argc, const char * argv[]) {
     
     
     return 0;
+}
+/*
+int trackInfecter(int patient_c)		//prototyping 필요.  
+{
+	int i, patient_i; 
+	
+	for(i=0;i<5;i++)		//5를 받아오는 총 환자수를 while문에서 받아온걸로 바꿔야 함 
+	{
+		if(patient_c != i)
+		{
+			int met_time;
+			met_time = isMet(patient_c, i);
+			
+			if(met_time>0) 	//만났다면  //위의 !=i와 &&로 묶어도 될듯. 
+			{
+				patient_i = i;		
+				return patient_i;
+			} 
+			else
+				return 0;
+		}
+	}
+}
+*/
+
+int isMet(int p1, int p2)     	//prototyping 필요.  unfinished //시점에 대한 함수도 추가로 필요. 
+{	
+	int i, metTime;
+	int p1_place, p1_time, p2_place;
+	
+	for(i=0;i<N_HISTORY-2;i++)
+	{
+		p1_place = ifctele_getHistPlaceIndex(ifctdb_getData(p1), i);
+		p1_time = ifctele_getinfestedTime(ifctdb_getData(p1)) - (N_HISTORY-1 - i);
+		p2_place = placeInTime(p2, p1_time);
+		
+		if (p1_place == p2_place)
+		{
+			metTime = p1_place;
+			//printf("p1_place is: %d\n", p1_place);
+		}
+	}
+		
+	return metTime;
+}
+/*
+int detectedTime(void* patient, int place)  //입력된 사람이 어떤 장소에서 있었던 시간이 언젠지 알려주는 함수. 
+{
+	int i;
+	int time;
+	for(i=0;i<N_HISTORY;i++)
+	{
+		
+	}
+	return time;
+}
+*/
+
+int placeInTime(int patient, int time) //특정 시점에서 환자가 있던 장소 출력 함수.
+{
+	return ifctele_getHistPlaceIndex(ifctdb_getData(patient), convertTimeToIndex(time, ifctele_getinfestedTime(ifctdb_getData(patient))));
+}
+
+int convertTimeToIndex(int time, int infestedTime)//시점에 대한 index 출력 함 
+{
+	int index = -1;
+	
+	if (time <= infestedTime && time > infestedTime - N_HISTORY)
+	{
+		index = N_HISTORY - (infestedTime - time) -1;
+	}
+	return index;
 }
