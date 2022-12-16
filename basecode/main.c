@@ -103,7 +103,7 @@ int main(int argc, const char * argv[]) {
                 printf("Place name : ");
                 scanf("%s", &place_selection);  ////받아온 정보들 중에서 장소를 이름으로 바꾼 후 비교. 
                 
-                for(i=0;i<5;i++)////몇명의 정보를 가져온지 아직 모름. 그만큼 돌려야 함(5 수정)  -->while 문 안에서 몇번 돌았는지 세면 될듯 
+                for(i=0;i<ifctdb_len();i++)
                 {	
                 	char* placeName = ifctele_getPlaceName(ifctele_getHistPlaceIndex(ifctdb_getData(i), 4));
                 
@@ -111,9 +111,9 @@ int main(int argc, const char * argv[]) {
 					{
 						ifctele_printElement(ifctdb_getData(i));
 						cnt++;
-					}             										
+					}
 				}
-				printf("there are %d patients in %s", cnt, &place_selection);
+				printf("There are %d patients detected in %s. \n\n", cnt, &place_selection);
                 break;
                 
             case MENU_AGE:              //3
@@ -122,9 +122,9 @@ int main(int argc, const char * argv[]) {
                 scanf("%d", &minAge_selection);
                 printf("Max age: ");
                 scanf("%d", &maxAge_selection);
-                                
-                for(i=0;i<5;i++)		////몇명의 정보를 가져온지 아직 모름. 그만큼 돌려야 함(5 수정)  
-                {	                	
+                             
+                for(i=0;i<ifctdb_len();i++)
+                {                
                 	int getAge = ifctele_getAge(ifctdb_getData(i));
                 	
 					if ((getAge>=minAge_selection) && (getAge<=maxAge_selection))			//등호에 따라. 제출 전 나이 경계부분 확인하기.  
@@ -133,7 +133,7 @@ int main(int argc, const char * argv[]) {
 						cnt++;
 					}																	
 				}
-				printf("there are %d patients between age from %d to %d \n\n ", cnt, minAge_selection, maxAge_selection ); //ㅊcnt수정 필요  
+				printf("There are %d patients whose age is between %d and %d. \n\n ", cnt, minAge_selection, maxAge_selection ); //ㅊcnt수정 필요  
 				
                 break;
                 
@@ -145,6 +145,7 @@ int main(int argc, const char * argv[]) {
 				int first_p=-1, infection_p=-1;
         		
         		printf("0and 2 is met : %d", isMet(0,2));
+        	//	trackInfecter(patient_selection);
         		/* Pseudocoding
         		해야하는 것: 환자 정보 받아와서   그사람이 누구를 만났는지 추적.     같은 장소에 있었던 사람이 추적되면 같은 시간에 있었는지까지 확인. 
         			getdata(current_p)                    trackInfecter()                     isMet()
@@ -156,24 +157,27 @@ int main(int argc, const char * argv[]) {
 				isMet(int p1, int p2)  p1과 p2가 만난 시간 가져오는 함수  
         		
         		
-        		*/
-        		
-        	//	detectedTime(current_p, ifctele_getHistPlaceIndex(current_p, 1));
-                //printf("%d", ifctele_getinfestedTime(ifctdb_getData(patient_selection))); //선택한 환자의 detected time 
-                /*
                 while(current_p != first_p) 
                 {
                 	infection_p = trackInfecter(current_p);
-                	if (infection_p != 0)
+                	printf("%d %d\n", current_p, infection_p);
+                	if (infection_p != -1)
+                	{
                 		printf("%i환자는 %i 환자에게 전파됨\n", current_p, infection_p);
-                   	else
-                		first_p = current_p;
+                		current_p = infection_p; 
+					}
                 		
-                	current_p = infection_p;                	
+                   	else
+                   	{	
+					   first_p = current_p;
+					   printf("만난사람 없음 \n");
+					   					}
+                	//current_p = infection_p;         	
+                	printf("while문1번\n");
 				}
-				printf("The first infector of %d is %d",patient_selection, current_p);   
+				printf("The first infector of %d is %d", patient_selection, first_p);
+                //만약 전파자가 없어서 한번에 빠져나온 경우 없다고 출력하는 식  
                 */
-                
                 
                 break;
                 
@@ -187,33 +191,35 @@ int main(int argc, const char * argv[]) {
     
     return 0;
 }
-/*
+
 int trackInfecter(int patient_c)		//prototyping 필요.  
 {
 	int i, patient_i; 
+	int met_time=0, first_met_time=1000;
 	
-	for(i=0;i<5;i++)		//5를 받아오는 총 환자수를 while문에서 받아온걸로 바꿔야 함 
+	for(i=0;i<ifctdb_len();i++)
 	{
-		if(patient_c != i)
+		if(i != patient_c)
 		{
-			int met_time;
 			met_time = isMet(patient_c, i);
-			
-			if(met_time>0) 	//만났다면  //위의 !=i와 &&로 묶어도 될듯. 
+			if(met_time > 0)			//만난사람중에 가장 빠른시간인거 아직 안함.  
 			{
-				patient_i = i;		
-				return patient_i;
-			} 
+				patient_i = i;
+				printf("%d and %d is met at %d \n\n", patient_c, patient_i, met_time);
+			}
 			else
-				return 0;
+				printf("안만남 \n");
+			
 		}
 	}
+	return patient_i;	
 }
-*/
 
+///의문 두 사람이 연속으로 같은 장소에 갔을 때 어떻게 처리?? 둘 중에 먼저 시간에 감염된걸로 코딩. 수정  
+ 
 int isMet(int p1, int p2)     	//prototyping 필요.  unfinished //시점에 대한 함수도 추가로 필요. 
 {	
-	int i, metTime;
+	int i, metTime = -1;
 	int p1_place, p1_time, p2_place;
 	
 	for(i=0;i<N_HISTORY-2;i++)
@@ -225,7 +231,8 @@ int isMet(int p1, int p2)     	//prototyping 필요.  unfinished //시점에 대한 함�
 		if (p1_place == p2_place)
 		{
 			metTime = p1_place;
-			//printf("p1_place is: %d\n", p1_place);
+			//printf("p1_place is: %d , time is : %d\n", p1_place, p1_time);
+			printf("(time:%d  place:%s )\n", p1_time, ifctele_getPlaceName(p1_place));
 		}
 	}
 		
