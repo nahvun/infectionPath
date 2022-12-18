@@ -18,7 +18,6 @@
 
 #define TIME_HIDE           2
 
-
 int trackInfester(int patient_no, int *detected_time, int *place);
 int main(int argc, const char * argv[]) {
     
@@ -143,17 +142,6 @@ int main(int argc, const char * argv[]) {
                 scanf("%d", &patient_selection);
                 int current_p = patient_selection;
 				int first_p=-1, infection_p=-1;
-        		/*
-        		printf("0and 1 is met : %d\n", isMet(0,1));
-        		printf("1and 0 is met : %d\n", isMet(1,0));
-        		printf("0and 2 is met : %d\n", isMet(0,2));
-        		printf("0and 3 is met : %d\n", isMet(0,3));
-        		printf("3and 0 is met : %d\n", isMet(3,0));
-        		printf("4and 2 is met : %d\n", isMet(4,2));
-        		//성공  
-        		*/
-        		//printf("%d is infected by %d", current_p, trackInfecter(current_p));            //성공  
-        		
         	//	trackInfecter(patient_selection);
         		/* Pseudocoding
         		해야하는 것: 환자 정보 받아와서   그사람이 누구를 만났는지 추적.     같은 장소에 있었던 사람이 추적되면 같은 시간에 있었는지까지 확인. 
@@ -165,26 +153,26 @@ int main(int argc, const char * argv[]) {
 				
 				isMet(int p1, int p2)  p1과 p2가 만난 시간 가져오는 함수  
         		*/
-				
         		
                 while(current_p != first_p) 
                 {
                 	infection_p = trackInfecter(current_p);
                 	if (infection_p != -1)
                 	{
-                		printf("[TRACKING]patient %d is infected by %d \n", current_p, infection_p);
+                		printf(" --> [TRACKING] patient %d is infected by %d " , current_p, infection_p);
+                		printisMet(current_p, infection_p);
 						current_p = infection_p;	
 					}
-                
                 	else
                 		first_p = current_p;
-                		
-                
+                	cnt ++;
 				}
-				printf("The first infector of %d is %d", current_p, first_p);
-				//바로 else문으로 가서 first==current이면 끝. 
-                //만약 전파자가 없어서 한번에 빠져나온 경우 없다고 출력하는 식  
-                                
+				
+				if (cnt == 1)
+					printf("%d is the first infector!! \n", patient_selection);
+				else
+					printf("The first infector of %d is %d", patient_selection, first_p);
+					
                 break;
                 
             default:
@@ -213,9 +201,6 @@ int trackInfecter(int patient_c)		//prototyping 필요.
 				patient_i = i;
 				//printf("%d and %d is met at %d \n\n", patient_c, patient_i, met_time);
 			}
-		//	else
-		//		printf("안만남 \n");
-			
 		}
 	}
 	return patient_i;	
@@ -224,7 +209,25 @@ int trackInfecter(int patient_c)		//prototyping 필요.
 ///의문 두 사람이 연속으로 같은 장소에 갔을 때 어떻게 처리?? 둘 중에 먼저 시간에 감염된걸로 코딩. 수정  
  
 
-int isMet(int p1, int p2)     	//prototyping 필요.  unfinished //시점에 대한 함수도 추가로 필요. 
+int isMet(int p1, int p2)     	//prototyping 필요.
+{	
+	int i, metTime = -1;
+	int p1_place, p1_time, p2_place, p2_dtime;
+	
+	for(i=0;i<N_HISTORY-2;i++)
+	{
+		p1_place = ifctele_getHistPlaceIndex(ifctdb_getData(p1), i);
+		p1_time = ifctele_getinfestedTime(ifctdb_getData(p1)) - (N_HISTORY-1 - i);
+		p2_place = placeInTime(p2, p1_time);
+		p2_dtime = ifctele_getinfestedTime(ifctdb_getData(p2));
+		
+		if ((p1_place == p2_place) && (p1_time == p2_dtime || p1_time == p2_dtime-1))
+			metTime = p1_time;
+	}
+	return metTime;
+}
+
+int printisMet(int p1, int p2)     	//prototyping 필요. 
 {	
 	int i, metTime = -1;
 	int p1_place, p1_time, p2_place, p2_dtime;
@@ -239,26 +242,11 @@ int isMet(int p1, int p2)     	//prototyping 필요.  unfinished //시점에 대한 함�
 		if ((p1_place == p2_place) && (p1_time == p2_dtime || p1_time == p2_dtime-1))
 		{
 			metTime = p1_time;
-			//printf("p1_place is: %d , time is : %d\n", p1_place, p1_time);
 			printf("(time:%d  place:%s )\n", p1_time, ifctele_getPlaceName(p1_place));
 		}
 	}
-		
-	return metTime;
+	return 0;
 }
-
-/*
-int detectedTime(void* patient, int place)  //입력된 사람이 어떤 장소에서 있었던 시간이 언젠지 알려주는 함수. 
-{
-	int i;
-	int time;
-	for(i=0;i<N_HISTORY;i++)
-	{
-		
-	}
-	return time;
-}
-*/
 
 int placeInTime(int patient, int time) //특정 시점에서 환자가 있던 장소 출력 함수.
 {
