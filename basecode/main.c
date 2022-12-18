@@ -139,7 +139,6 @@ int main(int argc, const char * argv[]) {
             
             	printf("Patient index : ");
                 scanf("%d", &patient_selection);
-            
                 if (patient_selection > ifctdb_len()-1)	//입력된 값이 전체 사람 수보다크면다시하라고 문구 출력 
                 {
                 	printf("[ERROR] Your input for the patient index (%d) is wrong! input must be 0 ~ %d", patient_selection, ifctdb_len()-1);
@@ -194,14 +193,14 @@ int main(int argc, const char * argv[]) {
 int trackInfecter(int patient_c)		//prototyping 필요.  
 {
 	int i, patient_i=-1; 
-	int met_time=0, first_met_time=10000;			//first_met_time 수정해야함.  가져온 함수들의 detectedtime중에서 가장 큰 수로 바꾸기  
+	int met_time=0, first_met_time=longestTime();
 	
 	for(i=0;i<ifctdb_len();i++)
 	{
 		if(i != patient_c)
 		{
 			met_time = isMet(patient_c, i);
-			if(met_time > 0 && met_time < first_met_time)			//만난사람중에 가장 빠른시간인거 아직 안함.  
+			if(met_time > 0 && met_time < first_met_time)
 			{
 				first_met_time = met_time;
 				patient_i = i;
@@ -267,4 +266,16 @@ int convertTimeToIndex(int time, int infestedTime)   //시점에 대한 index 출력 함
 		index = N_HISTORY - (infestedTime - time) -1;
 	}
 	return index;
+}
+
+int longestTime(void) 
+{
+	int i, time, longtime=0;
+	for(i=0;i<ifctdb_len();i++)
+	{
+		time = ifctele_getinfestedTime(ifctdb_getData(i));
+		if (time > longtime)
+			longtime = time;
+	}
+	return longtime;
 }
