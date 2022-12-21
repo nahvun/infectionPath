@@ -154,16 +154,18 @@ void ifctele_printElement(void* obj)
 {
 	ifs_ele_t *strPtr = (ifs_ele_t *)obj;
 	int i;
-	
+	printf("-------------------------------------------------------\n");
 	printf("Patient index: %i\n", strPtr->index);
 	printf("Patient age: %i\n", strPtr->age);
 	printf("Detected time: %i\n", strPtr->detected_time);
-	printf("Path History: ");
+	printf("Path History: "); //화살표도 하려면 dowhile문?? 
 	for(i=0;i<N_HISTORY;i++)
 	{
-		printf("%s(%d) \t", ifctele_getPlaceName(strPtr->place[i]), strPtr->detected_time + (i - 4));		//i 대신에 detected time 이 와야함. //4 대신 N_HISTORY-1이 낫나?? 
+		if (i<N_HISTORY-1)
+			printf("%s(%d)->  ", ifctele_getPlaceName(strPtr->place[i]), strPtr->detected_time - (N_HISTORY-1-i));		//i 대신에 detected time 이 와야함. //4 대신 N_HISTORY-1이 낫나?? 
+		else
+			printf("%s(%d)  ", ifctele_getPlaceName(strPtr->place[i]), strPtr->detected_time - (N_HISTORY-1-i));
 	}
 	printf("\n");
+	printf("-------------------------------------------------------\n");
 }
-
-
