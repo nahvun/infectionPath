@@ -98,12 +98,14 @@ char countryName[N_PLACE+1][MAX_PLACENAME] =
     "Unrecognized"
 };
 
+//change place index(int) to country name(char)
 char* ifctele_getPlaceName(int placeIndex)
 {
 	return countryName[placeIndex];
 }
 
-typedef struct ifs_ele			//감염자정보 저장 구조체  
+//structure of patients information
+typedef struct ifs_ele
 {
 	int index;
 	int age;
@@ -112,7 +114,7 @@ typedef struct ifs_ele			//감염자정보 저장 구조체
 	
 } ifs_ele_t;
 
-//fscanf로 가져온 정보를 구조체 안에 저장  
+//storage the structure of patients information
 void* ifctele_genElement(int index, int age, unsigned int detected_time, int history_place[N_HISTORY])
 {
 	ifs_ele_t *strPtr;
@@ -128,7 +130,7 @@ void* ifctele_genElement(int index, int age, unsigned int detected_time, int his
 	return strPtr;
 }
 
-
+//get patient's age
 int ifctele_getAge(void* obj)
 {
 	ifs_ele_t *strPtr = (ifs_ele_t *)obj; 
@@ -136,6 +138,7 @@ int ifctele_getAge(void* obj)
 	return strPtr->age;
 }
 
+//get patient's infested time
 unsigned int ifctele_getinfestedTime(void* obj)
 {
 	ifs_ele_t *strPtr = (ifs_ele_t *)obj;
@@ -143,6 +146,7 @@ unsigned int ifctele_getinfestedTime(void* obj)
 	return strPtr->detected_time;
 }
 
+//get patient's place depending on the index
 int ifctele_getHistPlaceIndex(void* obj, int index)
 {
 	ifs_ele_t *strPtr = (ifs_ele_t *)obj;
@@ -150,6 +154,7 @@ int ifctele_getHistPlaceIndex(void* obj, int index)
 	return strPtr->place[index]; 
 }
 
+//print patient's information
 void ifctele_printElement(void* obj)
 {
 	ifs_ele_t *strPtr = (ifs_ele_t *)obj;
@@ -163,6 +168,7 @@ void ifctele_printElement(void* obj)
 	{
 		if (i<N_HISTORY-1)
 			printf("%s(%d)->  ", ifctele_getPlaceName(strPtr->place[i]), strPtr->detected_time - (N_HISTORY-1-i));	
+		else
 			printf("%s(%d)  ", ifctele_getPlaceName(strPtr->place[i]), strPtr->detected_time - (N_HISTORY-1-i));
 	}
 	printf("\n");

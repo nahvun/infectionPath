@@ -164,7 +164,7 @@ int main(int argc, const char * argv[]) {
                 	break;	
 				}
 				
-                int current_p = patient_selection;
+				int current_p = patient_selection;
 				int first_p=-1, infection_p=-1;
         		/* 
         		 	description : get current patient's data and track who that patient met, find out where and when they met
@@ -172,15 +172,14 @@ int main(int argc, const char * argv[]) {
  				    
  				    1. put patient_selection in current_p
  				    2. find if there is a infector (infection_p)
- 				       if there is, it returns the infector's number and if not, returns -1
+ 				       if there is, return infector's number and if not, returns -1
  				    3. print the tracking process and put infection_p in current_p to find the previous infecter
  				    4. continue until there is no infection_p, put current_p in first_p
  				    5. finish and print first infecter
  				    
   					print value: tracking process and the first infecter
         		*/
-        	
-                while(current_p != first_p) 
+        	    while(current_p != first_p) 
                 {
                 	infection_p = trackInfecter(current_p);
                 	if (infection_p != -1)
@@ -219,7 +218,7 @@ int main(int argc, const char * argv[]) {
     
 	if there is infecter, trackInfecter() return infecter's number(patient_i) and if not, return -1.
 */
-int trackInfecter(int patient_c)		//prototyping 필요.  
+int trackInfecter(int patient_c)
 {
 	int i, patient_i=-1; 
 	int met_time=0, first_met_time=longestTime();
@@ -250,7 +249,7 @@ int trackInfecter(int patient_c)		//prototyping 필요.
 	   and p2 is in infect available time, p1 is infected by p2
 */
 
-int isMet(int p1, int p2)     	//prototyping 필요.
+int isMet(int p1, int p2) 
 {	
 	int i, metTime = -1;
 	int p1_place, p1_time, p2_place, p2_dtime;
