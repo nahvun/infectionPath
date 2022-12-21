@@ -20,7 +20,7 @@
 
 int trackInfester(int patient_no, int *detected_time, int *place);
 int isMet(int p1, int p2);
-int printisMet(int p1, int p2);
+void printisMet(int p1, int p2);
 int placeInTime(int patient, int time);
 int convertTimeToIndex(int time, int infestedTime);
 int longestTime(void);
@@ -228,6 +228,7 @@ int trackInfecter(int patient_c)
 		if(i != patient_c)
 		{
 			met_time = isMet(patient_c, i);
+			//finding first infecter
 			if(met_time > 0 && met_time < first_met_time)
 			{
 				first_met_time = met_time;
@@ -247,6 +248,7 @@ int trackInfecter(int patient_c)
 	2. in p1's infection available time, find out where p2 is (p2_place)
 	3. if p1_place and p2_place is same (met in the same time, same place),
 	   and p2 is in infect available time, p1 is infected by p2
+	4. return when p1 is infected by p2(metTime)
 */
 
 int isMet(int p1, int p2) 
@@ -273,7 +275,7 @@ int isMet(int p1, int p2)
     input parameters : two number of patients(p1, p2)
     print value : time and place when two people met
 */
-int printisMet(int p1, int p2) 
+void printisMet(int p1, int p2) 
 {	
 	int i, metTime = -1;
 	int p1_place, p1_time, p2_place, p2_dtime;
@@ -291,16 +293,14 @@ int printisMet(int p1, int p2)
 			printf("( time: %d  place: %s )\n", p1_time, ifctele_getPlaceName(p1_place));
 		}
 	}
-	return 0;
 }
 
 /*
     description : get the place where patient were in specific time
     input parameters : patient number, time
     return value : place index 
-    
 */
-int placeInTime(int patient, int time)      //특정 시점에서 환자가 있던 장소 출력 함수.
+int placeInTime(int patient, int time) 
 {
 	return ifctele_getHistPlaceIndex(ifctdb_getData(patient), convertTimeToIndex(time, ifctele_getinfestedTime(ifctdb_getData(patient))));
 }
@@ -309,7 +309,6 @@ int placeInTime(int patient, int time)      //특정 시점에서 환자가 있던 장소 출�
     description : convert time to index
     input parameters : time, patient's infested time
     return value : index - index of patient's place history
-    
 */
 int convertTimeToIndex(int time, int infestedTime) 
 {
@@ -328,7 +327,7 @@ int convertTimeToIndex(int time, int infestedTime)
     
     find the longest time in file to find the first_met_time in trackInfecter()
 */
-int longestTime(void) 
+int longestTime(void)
 {
 	int i, time, longtime=0;
 	for(i=0;i<ifctdb_len();i++)
